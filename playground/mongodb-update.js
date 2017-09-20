@@ -24,7 +24,10 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
   },{
     // Property object. What to update
     $set: {
-      comments: "I have been changed"
+      comments: "I have been changed Agin!!"
+    },
+    $inc: {
+      souls: 1
     }
   },{
     // Options
