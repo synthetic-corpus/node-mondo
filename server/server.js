@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
-const { todo } = require('./model/todo');
+const { Todo } = require('./model/todo');
 const { userModel } = require('./model/user')
 
 var app = express();
@@ -12,7 +12,15 @@ app.use(bodyParser.json());
 
 // These be the routes
 app.post('/todos', (req, res) => {
-  console.log(req.body);
+  var todo = new Todo({
+    text: req.body.text
+  });
+
+  todo.save().then((document)=>{
+    res.status(200).send(document);
+  }, (error)=>{
+    res.status(400).send(error);
+  });
 });
 
 // This be the listen
