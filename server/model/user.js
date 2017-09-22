@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userModel = mongoose.model('User', {
+const userModel = mongoose.model('userModel', {
   userName: {
     type: String,
     // Self explanatory

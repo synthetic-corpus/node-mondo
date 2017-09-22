@@ -23,6 +23,19 @@ app.post('/todos', (req, res) => {
   });
 });
 
+app.post('/user', (req, res) => {
+  var todo = new userModel({
+    userName: req.body.userName,
+    email: req.body.email
+  });
+
+  todo.save().then((document)=>{
+    res.status(200).send(document);
+  }, (error)=>{
+    res.status(400).send(error);
+  });
+});
+
 // This be the listen
 app.listen(3000, ()=> {
   console.log('I listen on port 3000!');
