@@ -10,6 +10,9 @@ Todo.find({
 }).then((todos)=> {
   console.log("Called Find");
   console.log('Todos..',todos);
+}, (error) => {
+  console.log("why did you break the database?");
+  console.log(error);
 });
 
 Todo.findOne({
@@ -17,4 +20,4 @@ Todo.findOne({
 }).then((todo)=>{
   console.log("Called Find One");
   console.log("Got this.. ",todo);
-})
+});
