@@ -1,6 +1,6 @@
-const { mongoose } = require('.././db/mongoose');
-const { Todo } = require('.././model/todo');
-const { userModel } = require('.././model/user');
+const { mongoose } = require('./../server/db/mongoose');
+const { Todo } = require('./../server/model/todo');
+const { userModel } = require('./../server/model/user');
 
 var id = "59c94a98bb021110af7cc73d";
 
