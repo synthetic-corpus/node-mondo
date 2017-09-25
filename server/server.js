@@ -3,12 +3,21 @@ const bodyParser = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
 const { Todo } = require('./model/todo');
-const { userModel } = require('./model/user')
+const { userModel } = require('./model/user');
 
 var app = express();
 
 // Not sure what this "middleware" does
 app.use(bodyParser.json());
+
+// These be the get routes
+app.get('/todos', (req, res) =>{
+  Todo.find().then((todos)=>{
+    res.status(200).send({todos});
+  }, (e) =>{
+    res.status(400).send(e);
+  })
+});
 
 // These be the routes
 app.post('/todos', (req, res) => {
