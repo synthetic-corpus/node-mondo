@@ -19,6 +19,17 @@ app.get('/todos', (req, res) =>{
   })
 });
 
+app.get("/todos:id", (req, res) =>{
+  let id = req.params.id;
+  if (!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }else{
+    res.status(200).send("Valid ID was sent");
+  }
+
+});
+//});
+
 // These be the routes
 app.post('/todos', (req, res) => {
   var todo = new Todo({
