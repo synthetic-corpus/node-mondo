@@ -8,6 +8,9 @@ const { ObjectID } = require('mongodb');
 
 var app = express();
 
+// Get the Heroku port or 3000 if not available.
+const port = process.env.PORT || 3000;
+
 // Not sure what this "middleware" does
 app.use(bodyParser.json());
 
@@ -30,7 +33,7 @@ app.get("/todos/:id", (req, res) =>{
     if (!todo){
       return res.status(400).send("Not found with that ID");
     }else{
-      return res.status(200).send(todo);
+      return res.status(200).send({todo});
     }
   })
 
@@ -64,8 +67,8 @@ app.post('/user', (req, res) => {
 });
 
 // This be the listen
-app.listen(3000, ()=> {
-  console.log('I listen on port 3000!');
+app.listen(port, ()=> {
+  console.log(`I listen on port ${port}!`);
 })
 
 module.exports = {app};
