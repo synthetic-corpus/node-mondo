@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -66,6 +68,31 @@ app.post('/user', (req, res) => {
   });
 });
 
+app.patch('/todo/:id',(req,res) => {
+  let id = req.params.id;
+  if (!ObjectID.isValid(id)){
+    return res.status(404).send("Bad id");
+  };
+  // Lodash Pick method takes two arguments
+  // The body to be picked from.
+  // The properties to pick.
+  let body = _.pick(req.body, ['text', 'completed']);
+
+  if (_.isBoolean(body.completed) && body.completed === true){
+    body.completeAt = new Date().getTime();
+  } else {
+    // "Text" is set set by user.
+    // Concievable that text could be an empty string.
+    body.completed = false;
+    body.completeAt = null;
+  }
+
+  Todo.findByIDAndUpdate(id, {$set:body}, {new:true}).then((todo) =>{
+    res.status(200).send({todo});
+  }).catch((e) => {
+    res.status(400).send();
+  })
+})
 // This be the listen
 app.listen(port, ()=> {
   console.log(`I listen on port ${port}!`);
