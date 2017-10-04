@@ -35,11 +35,14 @@ app.delete('/todos/:id', (req,res) => {
     if (todo){
       // Found something with this ID.
       // Return the Todo
-      res.status(200).send(todo);
+      return res.status(200).send(todo);
     } else {
-      res.status(400).send({"error":"found nothing with that ID"});
+      return res.status(400).send({"error":"found nothing with that ID"});
     }
   })
+}).catch((e)=>{
+  // For errors not concieved of here.
+  return res.status(400).send();
 })
 
 app.listen(port, ()=> {
