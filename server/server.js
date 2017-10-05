@@ -78,7 +78,7 @@ app.patch('/todo/:id',(req,res) => {
   // The properties to pick.
   let body = _.pick(req.body, ['text', 'completed']);
 
-  if (_.isBoolean(body.completed) && body.completed === true){
+  if (_.isBoolean(body.completed) && body.completed){
     body.completeAt = new Date().getTime();
   } else {
     // "Text" is set set by user.
@@ -87,7 +87,7 @@ app.patch('/todo/:id',(req,res) => {
     body.completeAt = null;
   }
 
-  Todo.findByIDAndUpdate(id, {$set:body}, {new:true}).then((todo) =>{
+  Todo.findByIdAndUpdate(id, {$set:body}, {new:true}).then((todo) =>{
     res.status(200).send({todo});
   }).catch((e) => {
     res.status(400).send();
