@@ -1,28 +1,45 @@
 const mongoose = require('mongoose');
-
-const userModel = mongoose.model('userModel', {
-  userName: {
-    type: String,
-    // Self explanatory
-    required: true,
-    minlength: 1,
-    // Cuts off empty space at the beginning and end of explanatory
-    trim: true
-  },
+const validator = require('validator');
+/*
+  What a user Object should look like:
+  {
+  email: address@website.net,
+  password: A hash of the password,
+  tokens: [{
+    access: auth,
+    token: A hash of the Token
+  }]
+}
+*/
+const User = mongoose.model('User', {
   email: {
     type: String,
     required: true,
-    minlength: 1,
-    trim: true
+    minlength: 5,
+    trim: true,
+    unique: true,
+    validate: {
+      validator: validator.isEmail,
+      message: `{VALUE} is not a valid email`
+    }
   },
-  species: {
+  password: {
     type: String,
-    default: "human",
-    minlength: 1,
-    trim: true
-  }
+    require: true,
+    minlength: 8,
+  },
+  tokens: [{
+    access: {
+      type: String,
+      required: true
+    },
+    token: {
+      type: String,
+      required: true
+    }
+  }]
 });
 
 module.exports = {
-  userModel
+  User
 }

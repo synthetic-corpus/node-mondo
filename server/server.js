@@ -1,11 +1,12 @@
 const _ = require('lodash');
+const validator = require('validator');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
 const { Todo } = require('./model/todo');
-const { userModel } = require('./model/user');
+const { User } = require('./model/user');
 const { ObjectID } = require('mongodb');
 
 var app = express();
@@ -40,7 +41,7 @@ app.get("/todos/:id", (req, res) =>{
   })
 
 });
-//});
+
 
 // These be the routes
 app.post('/todos', (req, res) => {
@@ -56,16 +57,16 @@ app.post('/todos', (req, res) => {
 });
 
 app.post('/user', (req, res) => {
-  var todo = new userModel({
-    userName: req.body.userName,
-    email: req.body.email
+  let species = _.pick(req.body, ['email','password']);
+  let toBeSaved = new User({
+    email: species.email,
+    password: species.email
   });
 
-  todo.save().then((document)=>{
-    res.status(200).send(document);
-  }, (error)=>{
-    res.status(400).send(error);
-  });
+  toBeSaved.save().then((document)=>{
+    res.status(200).send({reply: 'saved',data:document});
+  })
+
 });
 
 app.patch('/todo/:id',(req,res) => {
