@@ -65,6 +65,8 @@ app.post('/user', (req, res) => {
 
   toBeSaved.save().then((document)=>{
     res.status(200).send({reply: 'saved',data:document});
+  }).catch((e)=>{
+    res.status(500).send({reply:"internal Server Error",data:e});
   })
 
 });
