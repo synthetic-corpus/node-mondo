@@ -71,6 +71,24 @@ app.post('/user', (req, res) => {
   })
 
 });
+// An Authenticated Route
+app.get('/user/me', (req, res) => {
+  // Get the token from the Authentication request
+  var token = req.header('x-auth');
+
+  // Invoke FindByToken
+  User.findByToken(token).then((user)=>{
+    if (!user){
+      return Promise.reject();
+    }
+
+    res.status(200).send(user);
+
+  }).catch((e)=>{
+    res.status(401).send();
+    })
+});
+
 
 app.patch('/todo/:id',(req,res) => {
   let id = req.params.id;
