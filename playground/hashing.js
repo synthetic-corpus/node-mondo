@@ -1,7 +1,22 @@
 // SHA256 is a property from crypto js
 // It turns things tino hashes.
 
+<<<<<<< HEAD
 const {SHA256} = require ('crypto-js');
+=======
+const {SHA256} = require('crypto-js');
+const jwt = require('jsonwebtoken');
+
+let data = {
+  id:10
+};
+
+// Sign takes the 'salt' as the second arguments
+let token = jwt.sign(data, 'Ronald Reagen');
+console.log(token);
+
+/* Older Demo purposes only...
+>>>>>>> 55dfa0cb86e448d30063a3ad0b9bf914de24494b
 
 let message = "I want Pizza";
 let hash = SHA256(message).toString();
@@ -14,7 +29,31 @@ var data = {
   id: 4
 };
 
+<<<<<<< HEAD
 var token =  {
   data,
   hash: SHA256(JSON.stringify(data) + "A salt").toString()
 }
+=======
+// "a salt" is added to the data.
+// A user cannot make their own hash, and return it to the machine
+// without the salt.
+var token =  {
+  data,
+  hash: SHA256(JSON.stringify(data) + "A salt").toString()
+};
+
+token.data = {
+  id:5,
+  status: "Give me admin credentials!"
+}
+// This takes the data from the token, return by the user?
+var resultHash = SHA256(JSON.stringify(token.data)+ "A salt").toString();
+
+if (resultHash === token.hash){
+  console.log("Data was not changed");
+}else{
+  console.log("Data is definitely trustworthy. I swear. I promise. C'mon!");
+}
+*/
+>>>>>>> 55dfa0cb86e448d30063a3ad0b9bf914de24494b
