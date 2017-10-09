@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const jwt = requir('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 // Mongoose.Schema can have instance methods.
 // Mongoos.model cannot.
