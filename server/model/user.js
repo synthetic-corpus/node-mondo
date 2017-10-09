@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-
+const _ = require('lodash');
 // Mongoose.Schema can have instance methods.
 // Mongoos.model cannot.
 
@@ -33,6 +33,19 @@ var UserSchema = new mongoose.Schema({
     }
   }]
 })
+
+// User Schema returns *too much* information.
+// The Method below overides the default .toJson() method.
+// In the Context of UserSchema only.
+
+UserSchema.methods.toJSON = function () {
+  let user = this;
+  // Takes Mongoose Data, and turns it a JSON object
+  let userObject = user.toObject();
+  // instead of returning all data, returns only what's needed.
+  // Excludes password, tokens, etc.
+  return _.pick(userObject, ['_id','email']);
+}
 
 // Defines a  method for UserSchema
 UserSchema.methods.generateAuthToken = function () {
