@@ -58,14 +58,15 @@ app.post('/todos', (req, res) => {
 
 app.post('/user', (req, res) => {
   let species = _.pick(req.body, ['email','password']);
-  let toBeSaved = new User({
-    email: species.email,
-    password: species.email
-  });
+  let toBeSaved = new User(species);
 
-  toBeSaved.save().then((document)=>{
-    res.status(200).send({reply: 'saved',data:document});
-  }).catch((e)=>{
+  toBeSaved.save().then((toBeSaved)=>{
+    return user.generateAuthToken();
+    // res.status(200).send({reply: 'saved',data:document});
+  }).then((token) => {
+    res.status(200).send(toBeSaved);
+  })
+    .catch((e)=>{
     res.status(400).send({reply:"internal Server Error",data:e});
   })
 

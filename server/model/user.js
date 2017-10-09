@@ -1,17 +1,11 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-/*
-  What a user Object should look like:
-  {
-  email: address@website.net,
-  password: A hash of the password,
-  tokens: [{
-    access: auth,
-    token: A hash of the Token
-  }]
-}
-*/
-const User = mongoose.model('User', {
+const jwt = requir('jsonwebtoken');
+
+// Mongoose.Schema can have instance methods.
+// Mongoos.model cannot.
+
+const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -38,7 +32,24 @@ const User = mongoose.model('User', {
       required: true
     }
   }]
-});
+})
+
+// Defines a  method for UserSchema
+UserSchema.methods.generateAuthToken = function () {
+  var user = this;
+  var access = "auth";
+  var token = jwt.sign({_id: user._id.toHexString(), access}, 'The Secret Valu3').toString();
+
+  // Add the Access setting and Token to the empty tokens array
+  user.tokens.push({access,token});
+  return user.save().then(()=> {
+    // Token is returned to the object that calls
+    // When this method is called.
+    // Also saves the user instace after an update.
+    return token;
+  })
+};
+const User = mongoose.model('User', UserSchema);
 
 module.exports = {
   User
