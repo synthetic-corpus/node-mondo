@@ -57,17 +57,16 @@ app.post('/todos', (req, res) => {
 });
 
 app.post('/user', (req, res) => {
-  let species = _.pick(req.body, ['email','password']);
-  let toBeSaved = new User(species);
+  var species = _.pick(req.body, ['email','password']);
+  var toBeSaved = new User(species);
 
   toBeSaved.save().then((toBeSaved)=>{
-    return user.generateAuthToken();
+    return toBeSaved.generateAuthToken();
     // res.status(200).send({reply: 'saved',data:document});
   }).then((token) => {
     // x-auth creates a customer header.
     res.header('x-auth', token).send(toBeSaved);
-  })
-    .catch((e)=>{
+  }).catch((e)=>{
     res.status(400).send({reply:"internal Server Error",data:e});
   })
 

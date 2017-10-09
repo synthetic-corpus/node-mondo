@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 // Mongoose.Schema can have instance methods.
 // Mongoos.model cannot.
 
-const UserSchema = new mongoose.Schema({
+var UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
