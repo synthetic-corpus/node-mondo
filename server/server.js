@@ -64,7 +64,8 @@ app.post('/user', (req, res) => {
     return user.generateAuthToken();
     // res.status(200).send({reply: 'saved',data:document});
   }).then((token) => {
-    res.status(200).send(toBeSaved);
+    // x-auth creates a customer header.
+    res.header('x-auth', token).send(toBeSaved);
   })
     .catch((e)=>{
     res.status(400).send({reply:"internal Server Error",data:e});
