@@ -71,8 +71,8 @@ app.post('/user', (req, res) => {
   })
 
 });
-// An Authenticated Route
-app.get('/user/me', (req, res) => {
+// Authenticate the Middle Ware!
+let authenticate = (req, res, next) => {
   // Get the token from the Authentication request
   var token = req.header('x-auth');
 
@@ -82,11 +82,17 @@ app.get('/user/me', (req, res) => {
       return Promise.reject();
     }
 
-    res.status(200).send(user);
+    req.user = user;
+    req.token = token;
+    next();
 
   }).catch((e)=>{
     res.status(401).send();
     })
+}
+// An Authenticated Route
+app.get('/user/me', authenticate, (req, res) => {
+  res.send(req.user);
 });
 
 
