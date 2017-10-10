@@ -77,6 +77,9 @@ app.post('/user', (req, res) => {
 // Login!
 
 app.post('/user/login', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  res.status(200).send(body);
+  /*
   let email = req.body.email;
   let plainPassword = req.body.password;
   // let storedHash;
@@ -97,6 +100,7 @@ app.post('/user/login', (req, res) => {
       res.status(400).send("Some error occured");
     })
   })
+  */
 });
 
 // An Authenticated Route
