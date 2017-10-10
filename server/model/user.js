@@ -81,6 +81,31 @@ UserSchema.methods.generateAuthToken = function () {
   })
 };
 
+UserSchema.statics.findByCredentials = function (email, password) {
+  // Takes the email password.
+  // Returns either user object or triggers a reject.
+  // Called by server, which expects a promise of either a user object or reject
+
+  var user = this;
+
+  return User.findOne({email}).then((user) =>{
+    if(!user){
+      return Promise.reject();
+    }
+    // Because bcrypt returns a promise, its code is wrapped in a promise
+    // bcrypt will return true/false
+    // wrapped promise will return userobject or reject.
+    return new Promise ((resolve, reject) => {
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res){
+          resolve(user);
+        }else{
+          reject();
+        }
+      })
+    });
+  })
+}
 UserSchema.statics.findByToken = function(token){
   var User = this;
   var decoded;

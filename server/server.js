@@ -78,29 +78,13 @@ app.post('/user', (req, res) => {
 
 app.post('/user/login', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
-  res.status(200).send(body);
-  /*
-  let email = req.body.email;
-  let plainPassword = req.body.password;
-  // let storedHash;
-  User.findOne({email:email}).then((user)=>{
-    if (!user){
-      return res.status(400).send("nothing here ");
-    }
-    let storedHash = user.password;
-    bcrypt.compare(plainPassword, storedHash, (err, res) => {
-      if (res){
-        return "Login Good";
-      }else{
-        return Promise.reject();
-      }
-    }).then((thing)=>{
-      res.status(200).send(thing);
-    }).catch((e)=>{
-      res.status(400).send("Some error occured");
-    })
-  })
-  */
+
+  User.findByCredentials(body.email, body.password).then((user)=>{
+    res.status(200).send("Good work!")
+  }).catch((e) => {
+    res.status(400).send("nothing Found");
+  });
+  
 });
 
 // An Authenticated Route
