@@ -8,7 +8,8 @@ const {mongoose} = require('./db/mongoose');
 const { Todo } = require('./model/todo');
 const { User } = require('./model/user');
 const { ObjectID } = require('mongodb');
-const { authenticate } = require('../middleware/authenticate')
+const { authenticate } = require('../middleware/authenticate');
+const bcrypt = require('bcryptjs');
 
 var app = express();
 
@@ -71,6 +72,31 @@ app.post('/user', (req, res) => {
     res.status(400).send({reply:"internal Server Error",data:e});
   })
 
+});
+
+// Login!
+
+app.post('/user/login', (req, res) => {
+  let email = req.body.email;
+  let plainPassword = req.body.password;
+  // let storedHash;
+  User.findOne({email:email}).then((user)=>{
+    if (!user){
+      return res.status(400).send("nothing here ");
+    }
+    let storedHash = user.password;
+    bcrypt.compare(plainPassword, storedHash, (err, res) => {
+      if (res){
+        return "Login Good";
+      }else{
+        return Promise.reject();
+      }
+    }).then((thing)=>{
+      res.status(200).send(thing);
+    }).catch((e)=>{
+      res.status(400).send("Some error occured");
+    })
+  })
 });
 
 // An Authenticated Route
