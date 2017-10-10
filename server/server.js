@@ -8,6 +8,7 @@ const {mongoose} = require('./db/mongoose');
 const { Todo } = require('./model/todo');
 const { User } = require('./model/user');
 const { ObjectID } = require('mongodb');
+const { authenticate } = require('../middleware/authenticate')
 
 var app = express();
 
@@ -71,25 +72,7 @@ app.post('/user', (req, res) => {
   })
 
 });
-// Authenticate the Middle Ware!
-let authenticate = (req, res, next) => {
-  // Get the token from the Authentication request
-  var token = req.header('x-auth');
 
-  // Invoke FindByToken
-  User.findByToken(token).then((user)=>{
-    if (!user){
-      return Promise.reject();
-    }
-
-    req.user = user;
-    req.token = token;
-    next();
-
-  }).catch((e)=>{
-    res.status(401).send();
-    })
-}
 // An Authenticated Route
 app.get('/user/me', authenticate, (req, res) => {
   res.send(req.user);
