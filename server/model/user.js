@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 // Mongoose.Schema can have instance methods.
 // Mongoos.model cannot.
 
@@ -46,6 +47,23 @@ UserSchema.methods.toJSON = function () {
   // Excludes password, tokens, etc.
   return _.pick(userObject, ['_id','email']);
 }
+
+// .pre runs a function on 'save'.
+// It runs this function before .save() runs.
+UserSchema.pre('save', function (next) {
+  var user = this;
+
+  if (user.isModified('password')){
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(user.password, salt, (err, hash) => {
+        user.password = hash;
+        next();
+      })
+    })
+  }else{
+    next();
+  }
+})
 
 // Defines a  method for UserSchema
 UserSchema.methods.generateAuthToken = function () {
