@@ -80,11 +80,14 @@ app.post('/user/login', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
 
   User.findByCredentials(body.email, body.password).then((user)=>{
-    res.status(200).send("Good work!")
+    return user.generateAuthToken().then((token)=>{
+      res.status(200).header('x-auth', token).send(user);
+    })
+    // res.status(200).send("Good work!")
   }).catch((e) => {
-    res.status(400).send("nothing Found");
+    res.status(400).send("400 Error");
   });
-  
+
 });
 
 // An Authenticated Route
