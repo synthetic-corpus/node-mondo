@@ -20,8 +20,10 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // These be the get routes
-app.get('/todos', (req, res) =>{
-  Todo.find().then((todos)=>{
+app.get('/todos', authenticate, (req, res) =>{
+  Todo.find({
+    _creator: req.user._id // user._id from the Middleware
+  }).then((todos)=>{
     res.status(200).send({todos});
   }, (e) =>{
     res.status(400).send(e);
@@ -46,9 +48,10 @@ app.get("/todos/:id", (req, res) =>{
 
 
 // These be the routes
-app.post('/todos', (req, res) => {
+app.post('/todos', authenticate, (req, res) => {
   var todo = new Todo({
-    text: req.body.text
+    text: req.body.text,
+    _owner: req.user._id
   });
 
   todo.save().then((document)=>{

@@ -19,7 +19,7 @@ const Todo = mongoose.model('Todo', {
   },
   _owner: {
     require: true,
-    type: mongoose.Schema.Types.ObjectID,
+    type: mongoose.Schema.Types.ObjectId,
   }
 });
 
