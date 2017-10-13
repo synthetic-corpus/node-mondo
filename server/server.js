@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 // These be the get routes
 app.get('/todos', authenticate, (req, res) =>{
   Todo.find({
-    _creator: req.user._id // user._id from the Middleware
+    _owner: req.user._id // user._id from the Middleware
   }).then((todos)=>{
     res.status(200).send({todos});
   }, (e) =>{
