@@ -125,9 +125,8 @@ UserSchema.statics.findByToken = function(token){
     'tokens.access':'auth'
   });
 };
-const User = mongoose.model('User', UserSchema);
 
-UserSchema.methods.removeToken = function (token){
+UserSchema.methods.removeToken = function(token){
   var user = this;
   return user.update({
     $pull:{
@@ -137,6 +136,9 @@ UserSchema.methods.removeToken = function (token){
     }
   });
 };
+const User = mongoose.model('User', UserSchema);
+
+
 
 module.exports = {
   User
