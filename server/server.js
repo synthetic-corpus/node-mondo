@@ -135,7 +135,7 @@ app.patch('/todo/:id', authenticate, (req,res) => {
     body.completeAt = null;
   }
   Todo.findById(id).then((todo) =>{
-    if (reqId === todo._owner){
+    if (reqId.str === todo._owner.str){
       Todo.findByIdAndUpdate(id, {$set:body}, {new:true}).then((todo) =>{
         res.status(200).send({todo});
       })
