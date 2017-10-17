@@ -30,17 +30,24 @@ app.get('/todos', authenticate, (req, res) =>{
   })
 });
 
-app.get("/todos/:id", (req, res) =>{
+app.get('/todo/:id', authenticate, (req, res) =>{
+  console.log("Single Todo Hit");
+  var reqId = req.user._id;
+  console.log(`req.user._id returns, ${reqId}`);
   var id = req.params.id;
   if (!ObjectID.isValid(id)){
     return res.status(404).send("Bad id");
   }
   // If not return continue on.
   Todo.findById(id).then((todo)=>{
+    console.log(`todo._owner returns ${todo._owner}`);
+    console.log((reqId.str === todo._owner.str));
     if (!todo){
       return res.status(404).send("Not found with that ID");
-    }else{
+    }else if (reqId.str === todo._owner.str){
       return res.status(200).send({todo});
+    }else{
+      return res.status(401).send();
     }
   })
 
@@ -108,7 +115,8 @@ app.delete('/users/me/token', authenticate, (req, res) => {
   })
 })
 
-app.patch('/todo/:id',(req,res) => {
+app.patch('/todo/:id', authenticate, (req,res) => {
+  let reqId = req.user._id;
   let id = req.params.id;
   if (!ObjectID.isValid(id)){
     return res.status(404).send("Bad id");
@@ -126,13 +134,19 @@ app.patch('/todo/:id',(req,res) => {
     body.completed = false;
     body.completeAt = null;
   }
-
-  Todo.findByIdAndUpdate(id, {$set:body}, {new:true}).then((todo) =>{
-    res.status(200).send({todo});
+  Todo.findById(id).then((todo) =>{
+    if (reqId === todo._owner){
+      Todo.findByIdAndUpdate(id, {$set:body}, {new:true}).then((todo) =>{
+        res.status(200).send({todo});
+      })
+    }else{
+      res.status(401).send();
+    }
   }).catch((e) => {
-    res.status(400).send();
+    res.status(400).send();;
+
   })
-})
+});
 // This be the listen
 app.listen(port, ()=> {
   console.log(`I listen on port ${port}!`);
