@@ -31,17 +31,13 @@ app.get('/todos', authenticate, (req, res) =>{
 });
 
 app.get('/todo/:id', authenticate, (req, res) =>{
-  console.log("Single Todo Hit");
   var reqId = req.user._id;
-  console.log(`req.user._id returns, ${reqId}`);
   var id = req.params.id;
   if (!ObjectID.isValid(id)){
     return res.status(404).send("Bad id");
   }
   // If not return continue on.
   Todo.findById(id).then((todo)=>{
-    console.log(`todo._owner returns ${todo._owner}`);
-    console.log((reqId.str === todo._owner.str));
     if (!todo){
       return res.status(404).send("Not found with that ID");
     }else if (reqId.str === todo._owner.str){
