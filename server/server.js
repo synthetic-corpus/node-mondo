@@ -131,8 +131,25 @@ app.patch('/todo/:id', authenticate, (req,res) => {
     body.completed = false;
     body.completeAt = null;
   }
-  Todo.findById(id).then((todo) =>{
-    if (reqId.str === todo._owner.str){
+  // Newer Version
+  Todo.findOneAndUpdate(
+    {
+      _id: id,
+      _owner:reqID
+    },
+    {$set:body},
+    {new:true}
+  ).then((todo) => {
+    res.status(200).send({todo});
+  }).catch((e)=>{
+    res.status(401).send();
+  })
+  /*
+  Todo.findOne({
+    _id: id,
+    _owner: reqID
+  }).then((todo) =>{
+    if (todo){
       Todo.findByIdAndUpdate(id, {$set:body}, {new:true}).then((todo) =>{
         res.status(200).send({todo});
       })
@@ -143,6 +160,7 @@ app.patch('/todo/:id', authenticate, (req,res) => {
     res.status(400).send();;
 
   })
+  */
 });
 // This be the listen
 app.listen(port, ()=> {
