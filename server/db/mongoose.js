@@ -1,9 +1,6 @@
-const mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
-// Set promise for Mongoose. Is global. Needs only once.
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI ||'mongodb://localhost:27017/TodoApp');
+mongoose.connect(process.env.MONGODB_URI);
 
-module.exports = {
-  mongoose
-};
+module.exports = {mongoose};
