@@ -135,12 +135,16 @@ app.patch('/todo/:id', authenticate, (req,res) => {
   Todo.findOneAndUpdate(
     {
       _id: id,
-      _owner:reqID
+      _owner:reqId
     },
     {$set:body},
     {new:true}
   ).then((todo) => {
-    res.status(200).send({todo});
+    if (!todo){
+      res.status(404).send("Could not find that todo")
+    }else{
+      res.status(200).send({todo});
+    }
   }).catch((e)=>{
     res.status(401).send();
   })
